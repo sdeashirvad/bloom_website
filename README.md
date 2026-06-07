@@ -12,15 +12,15 @@ Created by [SDEAshirvad Labs](https://ashirvad.work).
 
 ```
 bloom_website/
-├── index.html              # Homepage
-├── privacy.html            # Privacy policy
-├── support.html            # Support + FAQ
+├── index.html              # Homepage (/)
+├── privacy/
+│   └── index.html          # Privacy policy (/privacy)
+├── support/
+│   └── index.html          # Support + FAQ (/support)
 ├── 404.html                # Custom 404 page
 ├── robots.txt              # Crawler directives
 ├── sitemap.xml             # Search engine sitemap
-├── _redirects              # Cloudflare Pages clean URLs + APK redirect
-├── download/
-│   └── Bloom-Preview.apk   # Early preview build
+├── _redirects              # Optional APK redirect only
 ├── styles/
 │   └── main.css
 ├── assets/
@@ -46,7 +46,7 @@ python -m http.server 8080
 
 Open [http://localhost:8080](http://localhost:8080).
 
-> **Note:** The `_redirects` file only works on Cloudflare Pages. Locally, use direct paths like `/download/Bloom-Preview.apk` or `privacy.html`.
+> **Note:** Folder-based routes work natively on Cloudflare Pages and with `python -m http.server`. Visit `/privacy/` or `/privacy` locally.
 
 ### Option 2 — npx serve (if Node.js is installed)
 
@@ -74,13 +74,17 @@ npx serve .
    - **Build output directory:** `/`
 5. Deploy, then add custom domain `bloom.ashirvad.work`
 
-### Clean URLs (`_redirects`)
+### Routing
 
-| Route | Destination |
-|-------|-------------|
-| `/privacy` | `privacy.html` |
-| `/support` | `support.html` |
-| `/download` | `download/Bloom-Preview.apk` (302 redirect) |
+Pages are served via folder-based routes — no rewrite rules needed:
+
+| URL | File |
+|-----|------|
+| `/` | `index.html` |
+| `/privacy` | `privacy/index.html` |
+| `/support` | `support/index.html` |
+
+Optional `_redirects` entry for APK download only (when hosting is configured).
 
 ### APK hosting (Cloudflare R2)
 
