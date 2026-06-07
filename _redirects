@@ -1,1 +1,3 @@
-/download   https://REPLACE_WITH_R2_PUBLIC_URL/Bloom-Preview.apk   302
+/download      https://github.com/sdeashirvad/bloom_website/releases/download/v1.bloom_preview/Bloom-Preview.apk   302
+/download/     https://github.com/sdeashirvad/bloom_website/releases/download/v1.bloom_preview/Bloom-Preview.apk   302
+/download/*  https://github.com/sdeashirvad/bloom_website/releases/download/v1.bloom_preview/Bloom-Preview.apk   302

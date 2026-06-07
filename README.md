@@ -83,62 +83,34 @@ Pages are served via folder-based routes — no rewrite rules needed:
 | `/` | `index.html` |
 | `/privacy` | `privacy/index.html` |
 | `/support` | `support/index.html` |
+| `/download` | GitHub Release asset (302 via `_redirects`) |
 
-Optional `_redirects` entry for APK download only (when hosting is configured).
+### APK hosting (GitHub Releases)
 
-### APK hosting (Cloudflare R2)
+`Bloom-Preview.apk` (~70 MB) is too large for Cloudflare Pages (25 MB limit). It is hosted as a [GitHub Release asset](https://github.com/sdeashirvad/bloom_website/releases). Users tap **Try Bloom Early** → `bloom.ashirvad.work/download` → silent 302 → direct file download. No GitHub UI, no redirect loops.
 
-`Bloom-Preview.apk` is ~70 MB — too large for Cloudflare Pages (25 MB limit). The APK is hosted on **Cloudflare R2** instead. Pages redirects `/download` to the R2 public URL via `_redirects`.
+Current `_redirects` entries (covers `/download`, `/download/`, and any subpath):
 
-#### One-time R2 setup
-
-**Step 0 — Enable R2 on your Cloudflare account** (required once):
-
-1. Open [Cloudflare R2 Overview](https://dash.cloudflare.com/?to=/:account/r2/overview)
-2. Click **Purchase R2** or **Enable R2** (free tier, no card required for basic usage)
-3. Wait until the R2 dashboard loads
-
-**Step 1 — Run the setup script** from the project root in PowerShell:
-
-```powershell
-.\scripts\setup-r2.ps1
+```
+/download      https://github.com/.../Bloom-Preview.apk   302
+/download/     https://github.com/.../Bloom-Preview.apk   302
+/download/*    https://github.com/.../Bloom-Preview.apk   302
 ```
 
-The script will:
-
-1. Log you into Cloudflare (browser opens on first run)
-2. Create R2 bucket `bloom-downloads`
-3. Upload `download/Bloom-Preview.apk`
-4. Enable the public `r2.dev` URL
-5. Update `_redirects` with the real R2 URL
-
-Then commit and push `_redirects` (the APK itself is **not** in git):
-
-```powershell
-git add _redirects .gitignore scripts/setup-r2.ps1
-git commit -m "Point /download to R2-hosted APK"
-git push origin main
-```
+`download/index.html` is a local-dev fallback only — Cloudflare `_redirects` takes priority and triggers an immediate file download. **Do not** place `Bloom-Preview.apk` in `download/` (causes directory listings).
 
 #### Updating the APK later
 
-```powershell
-# Replace the local file, then re-upload only:
-npx wrangler r2 object put bloom-downloads/Bloom-Preview.apk --file=download/Bloom-Preview.apk --content-type=application/vnd.android.package-archive
-```
-
-No Pages redeploy needed — the `/download` redirect URL stays the same.
-
-#### Production note
-
-`r2.dev` URLs are rate-limited (fine for early preview). For heavy traffic, connect a custom domain (e.g. `download.bloom.ashirvad.work`) to the R2 bucket in **Cloudflare Dashboard → R2 → bloom-downloads → Settings → Custom Domains**, then update `_redirects` accordingly.
+1. Create a new GitHub Release (or replace the asset on `v1.bloom_preview`)
+2. Update the URL in `_redirects` if the tag changes
+3. Push — the public link `bloom.ashirvad.work/download` stays the same for users
 
 ---
 
 ## Early Preview APK
 
-- **Local file:** `download/Bloom-Preview.apk` (gitignored, used for R2 upload)
-- **Public URL:** `https://bloom.ashirvad.work/download` → redirects to R2
+- **Hosted on:** GitHub Releases (`v1.bloom_preview`)
+- **User-facing URL:** `https://bloom.ashirvad.work/download`
 - **Homepage CTA:** "Try Bloom Early"
 
 ---
