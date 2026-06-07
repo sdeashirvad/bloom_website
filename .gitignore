@@ -1,0 +1,13 @@
+# APK is hosted on Cloudflare R2, not in git
+download/*.apk
+
+# IDE
+.idea/
+
+# Wrangler
+.wrangler/
+.dev.vars
+
+# OS
+.DS_Store
+Thumbs.db
