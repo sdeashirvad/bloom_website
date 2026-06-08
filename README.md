@@ -17,27 +17,24 @@ bloom_website/
 │   └── index.html          # Privacy policy (/privacy)
 ├── support/
 │   └── index.html          # Support + FAQ (/support)
+├── download/
+│   └── index.html          # Early APK download UX (/download)
 ├── 404.html                # Custom 404 page
 ├── robots.txt              # Crawler directives
 ├── sitemap.xml             # Search engine sitemap
-├── _redirects              # Optional APK redirect only
 ├── styles/
 │   └── main.css
 ├── assets/
-│   └── images/
-│       └── icon.png
+│   └── images/             # Screenshots, icon, feature-graphic
 ├── scripts/
-│   └── main.js
+│   ├── main.js             # Scroll fade-in
+│   └── carousel.js         # Screenshot carousel + lightbox
 └── README.md
 ```
 
 ---
 
 ## Local Development (Windows)
-
-No dependencies or build tools needed.
-
-### Option 1 — Python (recommended)
 
 ```powershell
 cd c:\Users\aashirvad\Documents\bloom_website
@@ -46,97 +43,76 @@ python -m http.server 8080
 
 Open [http://localhost:8080](http://localhost:8080).
 
-> **Note:** Folder-based routes work natively on Cloudflare Pages and with `python -m http.server`. Visit `/privacy/` or `/privacy` locally.
-
-### Option 2 — npx serve (if Node.js is installed)
-
-```powershell
-npx serve .
-```
-
 ---
 
 ## Deploy to Cloudflare Pages
 
-### Prerequisites
-
-- A [Cloudflare](https://dash.cloudflare.com) account
-- Repository pushed to GitHub (`github.com/sdeashirvad/bloom_website`)
-
-### Steps
-
-1. Push code to GitHub
-2. Cloudflare Dashboard → **Workers & Pages** → **Create** → **Pages** → **Connect to Git**
-3. Select the `bloom_website` repository
-4. Build settings:
-   - **Framework preset:** None
-   - **Build command:** *(leave empty)*
-   - **Build output directory:** `/`
-5. Deploy, then add custom domain `bloom.ashirvad.work`
+1. Push code to GitHub (`github.com/sdeashirvad/bloom_website`)
+2. Cloudflare Dashboard → **Workers & Pages** → Connect to Git
+3. Build settings: **None**, output directory `/`
+4. Add custom domain `bloom.ashirvad.work`
 
 ### Routing
-
-Pages are served via folder-based routes — no rewrite rules needed:
 
 | URL | File |
 |-----|------|
 | `/` | `index.html` |
 | `/privacy` | `privacy/index.html` |
 | `/support` | `support/index.html` |
-| `/download` | GitHub Release asset (302 via `_redirects`) |
+| `/download` | `download/index.html` |
 
-### APK hosting (GitHub Releases)
+No `_redirects` file needed for page routes.
 
-`Bloom-Preview.apk` (~70 MB) is too large for Cloudflare Pages (25 MB limit). It is hosted as a [GitHub Release asset](https://github.com/sdeashirvad/bloom_website/releases). Users tap **Try Bloom Early** → `bloom.ashirvad.work/download` → silent 302 → direct file download. No GitHub UI, no redirect loops.
+---
 
-Current `_redirects` entries (covers `/download`, `/download/`, and any subpath):
+## Screenshot Carousel
 
-```
-/download      https://github.com/.../Bloom-Preview.apk   302
-/download/     https://github.com/.../Bloom-Preview.apk   302
-/download/*    https://github.com/.../Bloom-Preview.apk   302
-```
+The homepage hero displays 7 app screenshots in a device-frame carousel with prev/next controls and dot indicators. Click any screenshot to view it larger; click away or press Escape to close.
 
-`download/index.html` is a local-dev fallback only — Cloudflare `_redirects` takes priority and triggers an immediate file download. **Do not** place `Bloom-Preview.apk` in `download/` (causes directory listings).
-
-#### Updating the APK later
-
-1. Create a new GitHub Release (or replace the asset on `v1.bloom_preview`)
-2. Update the URL in `_redirects` if the tag changes
-3. Push — the public link `bloom.ashirvad.work/download` stays the same for users
+Images live in `assets/images/`: `homepage.png`, `journal.png`, `this_week.png`, `memories.png`, `memory_book.png`, `book.png`, `privacy.png`.
 
 ---
 
 ## Early Preview APK
 
-- **Hosted on:** GitHub Releases (`v1.bloom_preview`)
-- **User-facing URL:** `https://bloom.ashirvad.work/download`
-- **Homepage CTA:** "Try Bloom Early"
+APK is hosted on [GitHub Releases](https://github.com/sdeashirvad/bloom_website/releases) (`v1.bloom_preview`).
+
+**Flow:** User taps **Try Bloom Early** → `/download` → calm confirmation page → APK download triggered → auto-return to homepage after 2 seconds.
+
+To update the APK URL, edit `download/index.html` (search for `v1.bloom_preview`).
+
+**Do not** place `Bloom-Preview.apk` in the `download/` folder — it causes directory listings and bypasses the download UX.
 
 ---
 
-## Replacing the Play Store CTA
+## SEO and Google Search Console
 
-When Bloom is live on Google Play, update `index.html`:
+- `sitemap.xml` and `robots.txt` at project root
+- Canonical domain: `https://bloom.ashirvad.work`
+- Social previews use `assets/images/feature-graphic.png`
+- Favicon uses `assets/images/icon.png`
 
-```html
-<!-- Replace: -->
-<span class="btn-pill btn-pill--disabled btn-play-store" role="status">Coming soon to Google Play</span>
+### Submit sitemap to Google Search Console
 
-<!-- With: -->
-<a href="https://play.google.com/store/apps/details?id=YOUR_APP_ID" class="btn-pill btn-play-store">
-  Get it on Google Play
-</a>
+1. Add property: `https://bloom.ashirvad.work` (URL prefix, not `http://`)
+2. Verify ownership (DNS or HTML tag)
+3. Submit: `https://bloom.ashirvad.work/sitemap.xml`
+
+### If GSC says "Sitemap could not be read"
+
+Verify the file is live:
+
+```powershell
+curl -I https://bloom.ashirvad.work/sitemap.xml
 ```
 
----
+Expected: `HTTP 200` and XML content starting with `<?xml`.
 
-## SEO
-
-- Canonical URLs, OpenGraph, and Twitter cards on all main pages
-- JSON-LD `SoftwareApplication` schema on homepage (associates Bloom with SDEAshirvad Labs and Ashirvad Kumar Pandey)
-- `robots.txt` and `sitemap.xml` at project root
-- OG image: `assets/images/icon.png`
+Common fixes:
+- Ensure `sitemap.xml` is committed at repo root and deployed
+- GSC property URL must match exactly (`https://bloom.ashirvad.work`)
+- Wait for Cloudflare SSL to be Active before resubmitting
+- Do not add `_redirects` rules that catch `sitemap.xml`
 
 ---
 
@@ -144,5 +120,5 @@ When Bloom is live on Google Play, update `index.html`:
 
 - **Fonts:** Cormorant Garamond (headings) and Inter (body) via Google Fonts
 - **Colors:** Warm cream background, dusty rose accents, muted sage trust indicators
-- **Motion:** Subtle fade-in on scroll; disabled when `prefers-reduced-motion` is set
+- **Motion:** Subtle fade-in on scroll; carousel has no autoplay
 - **No analytics:** The website contains no tracking scripts

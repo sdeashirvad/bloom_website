@@ -4,14 +4,54 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex">
-  <meta http-equiv="refresh" content="0; url=https://github.com/sdeashirvad/bloom_website/releases/download/v1.bloom_preview/Bloom-Preview.apk">
-  <title>Bloom — Download</title>
+  <meta name="theme-color" content="#F9F5F0">
+  <title>Download — Bloom</title>
+  <link rel="icon" href="/assets/images/icon.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/styles/main.css">
 </head>
 <body>
+  <a href="#main" class="skip-link">Skip to content</a>
+
+  <header class="site-header">
+    <div class="container">
+      <a href="/" class="wordmark" aria-label="Bloom home">Bloom</a>
+    </div>
+  </header>
+
+  <main id="main" class="page-404">
+    <div class="container">
+      <h1>Beginning download…</h1>
+      <p class="body-sans">Your preview build should start momentarily.</p>
+      <p class="body-sans text-muted text-small">If it doesn't, <a href="https://github.com/sdeashirvad/bloom_website/releases/download/v1.bloom_preview/Bloom-Preview.apk" id="apk-fallback">tap here to download</a>.</p>
+      <a href="/" class="btn-pill btn-pill--outline mt-medium">Return to Bloom</a>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <nav class="footer-nav" aria-label="Footer">
+        <a href="/privacy">Privacy</a>
+        <a href="/support">Support</a>
+      </nav>
+      <p class="footer-disclaimer">Bloom is a gentle emotional companion, not a medical resource.</p>
+      <p class="footer-attribution">Built by <a href="https://ashirvad.work">SDEAshirvad Labs</a>.</p>
+    </div>
+  </footer>
+
+  <a id="apk-trigger" href="https://github.com/sdeashirvad/bloom_website/releases/download/v1.bloom_preview/Bloom-Preview.apk" hidden aria-hidden="true">Download APK</a>
+
   <script>
-    location.replace('https://github.com/sdeashirvad/bloom_website/releases/download/v1.bloom_preview/Bloom-Preview.apk');
+    (function () {
+      var apkUrl = "https://github.com/sdeashirvad/bloom_website/releases/download/v1.bloom_preview/Bloom-Preview.apk";
+      var trigger = document.getElementById("apk-trigger");
+      if (trigger) trigger.click();
+      setTimeout(function () {
+        location.replace("/");
+      }, 2000);
+    })();
   </script>
-  <p class="body-sans" style="text-align:center;padding:clamp(4rem,10vw,8rem);">Beginning download…</p>
 </body>
 </html>

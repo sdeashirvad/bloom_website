@@ -13,13 +13,15 @@
   <meta property="og:url" content="https://bloom.ashirvad.work/">
   <meta property="og:title" content="Bloom — A quiet pregnancy companion">
   <meta property="og:description" content="Private, reflective, and entirely yours.">
-  <meta property="og:image" content="https://bloom.ashirvad.work/assets/images/icon.png">
+  <meta property="og:image" content="https://bloom.ashirvad.work/assets/images/feature-graphic.png">
   <meta property="og:site_name" content="Bloom">
 
-  <meta name="twitter:card" content="summary">
+  <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Bloom — A quiet pregnancy companion">
   <meta name="twitter:description" content="Private, reflective, and entirely yours.">
-  <meta name="twitter:image" content="https://bloom.ashirvad.work/assets/images/icon.png">
+  <meta name="twitter:image" content="https://bloom.ashirvad.work/assets/images/feature-graphic.png">
+
+  <link rel="sitemap" type="application/xml" href="/sitemap.xml">
 
   <link rel="icon" href="/assets/images/icon.png" type="image/png">
   <link rel="apple-touch-icon" href="/assets/images/icon.png">
@@ -38,7 +40,7 @@
     "operatingSystem": "Android",
     "url": "https://bloom.ashirvad.work",
     "downloadUrl": "https://bloom.ashirvad.work/download",
-    "image": "https://bloom.ashirvad.work/assets/images/icon.png",
+    "image": "https://bloom.ashirvad.work/assets/images/feature-graphic.png",
     "offers": {
       "@type": "Offer",
       "price": "0",
@@ -73,24 +75,43 @@
         <p class="hero__subtitle fade-in">A quiet pregnancy companion.</p>
         <p class="hero__text body-sans fade-in">Private, reflective, and entirely yours.</p>
 
-        <div class="hero__visual fade-in" aria-hidden="true">
+        <div class="hero__visual fade-in" id="screenshot-carousel" role="region" aria-label="App screenshots" tabindex="0">
           <div class="bloom-circles"></div>
-          <div class="device-frame">
-            <div class="device-frame__screen">
-              <div class="device-frame__dots">
-                <span class="device-frame__dot device-frame__dot--active"></span>
-                <span class="device-frame__dot"></span>
-                <span class="device-frame__dot"></span>
-                <span class="device-frame__dot"></span>
-                <span class="device-frame__dot"></span>
-                <span class="device-frame__dot"></span>
+          <div class="screenshot-carousel">
+            <button type="button" class="screenshot-carousel__nav screenshot-carousel__nav--prev" aria-label="Previous screenshot">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M12 4L6 10L12 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div class="device-frame">
+              <div class="device-frame__screen">
+                <div class="device-frame__dots" id="carousel-dots" aria-hidden="true"></div>
+                <div class="device-frame__slides">
+                  <figure class="device-frame__slide is-active">
+                    <img src="/assets/images/homepage.png" alt="Bloom home screen" width="941" height="1672" loading="eager">
+                  </figure>
+                  <figure class="device-frame__slide">
+                    <img src="/assets/images/journal.png" alt="Bloom journal" width="941" height="1672" loading="lazy">
+                  </figure>
+                  <figure class="device-frame__slide">
+                    <img src="/assets/images/this_week.png" alt="Bloom this week view" width="1024" height="1536" loading="lazy">
+                  </figure>
+                  <figure class="device-frame__slide">
+                    <img src="/assets/images/memories.png" alt="Bloom memories" width="941" height="1672" loading="lazy">
+                  </figure>
+                  <figure class="device-frame__slide">
+                    <img src="/assets/images/memory_book.png" alt="Bloom memory book" width="1024" height="1536" loading="lazy">
+                  </figure>
+                  <figure class="device-frame__slide">
+                    <img src="/assets/images/book.png" alt="Bloom keepsake book" width="1024" height="1536" loading="lazy">
+                  </figure>
+                  <figure class="device-frame__slide">
+                    <img src="/assets/images/privacy.png" alt="Bloom privacy settings" width="941" height="1672" loading="lazy">
+                  </figure>
+                </div>
               </div>
-              <div class="device-frame__circles"></div>
-              <span class="device-frame__label">You belong here</span>
-              <p class="device-frame__heading">Gentle support, always beside you.</p>
-              <p class="device-frame__body">Bloom was made for the tender, complex, extraordinary experience of pregnancy — to walk beside you, not overwhelm you.</p>
-              <div class="device-frame__btn">Continue</div>
             </div>
+            <button type="button" class="screenshot-carousel__nav screenshot-carousel__nav--next" aria-label="Next screenshot">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M8 4L14 10L8 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
           </div>
         </div>
       </div>
@@ -147,6 +168,12 @@
     </div>
   </footer>
 
+  <div class="lightbox" id="lightbox" hidden aria-hidden="true">
+    <button type="button" class="lightbox__close" aria-label="Close enlarged view">&times;</button>
+    <img class="lightbox__img" src="" alt="">
+  </div>
+
   <script src="/scripts/main.js" defer></script>
+  <script src="/scripts/carousel.js" defer></script>
 </body>
 </html>

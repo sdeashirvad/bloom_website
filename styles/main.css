@@ -271,11 +271,45 @@ main {
   z-index: 0;
 }
 
-/* --- Device Mockup --- */
+/* --- Screenshot Carousel --- */
+
+.screenshot-carousel {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: clamp(0.75rem, 3vw, 1.5rem);
+}
+
+.screenshot-carousel__nav {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  border: 1px solid rgba(45, 41, 38, 0.1);
+  border-radius: 50%;
+  background: var(--white);
+  color: var(--accent-sage);
+  cursor: pointer;
+  box-shadow: var(--shadow-soft);
+  transition: opacity 0.25s ease, background 0.25s ease;
+}
+
+.screenshot-carousel__nav:hover {
+  opacity: 0.85;
+  background: var(--bg-cream-deep);
+}
+
+.screenshot-carousel__nav:focus-visible {
+  outline: 2px solid var(--accent-rose);
+  outline-offset: 3px;
+}
 
 .device-frame {
   position: relative;
-  z-index: 1;
   width: clamp(220px, 55vw, 300px);
   background: var(--bg-cream);
   border-radius: 32px;
@@ -285,17 +319,17 @@ main {
 }
 
 .device-frame__screen {
-  padding: 1.75rem 1.5rem 1.5rem;
+  padding: 1.25rem 1rem 1rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-height: 420px;
 }
 
 .device-frame__dots {
   display: flex;
   gap: 6px;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
+  justify-content: center;
 }
 
 .device-frame__dot {
@@ -303,6 +337,10 @@ main {
   height: 6px;
   border-radius: 50%;
   background: rgba(45, 41, 38, 0.08);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: background 0.25s ease, width 0.25s ease;
 }
 
 .device-frame__dot--active {
@@ -311,60 +349,89 @@ main {
   background: var(--accent-rose);
 }
 
-.device-frame__circles {
-  width: 140px;
-  height: 140px;
-  border-radius: 50%;
-  margin-bottom: 2.5rem;
-  background:
-    radial-gradient(circle, rgba(209, 139, 114, 0.15) 0%, transparent 50%),
-    radial-gradient(circle, rgba(232, 237, 228, 0.8) 0%, transparent 70%),
-    radial-gradient(circle, rgba(243, 237, 228, 0.9) 0%, transparent 90%);
-}
-
-.device-frame__label {
-  font-size: 0.625rem;
-  font-weight: 500;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--accent-rose);
-  margin-bottom: 0.75rem;
-  align-self: flex-start;
-}
-
-.device-frame__heading {
-  font-family: var(--font-serif);
-  font-size: 1.375rem;
-  font-weight: 500;
-  color: var(--text-primary);
-  line-height: 1.3;
-  text-align: left;
-  align-self: flex-start;
-  margin-bottom: 0.75rem;
-}
-
-.device-frame__body {
-  font-size: 0.75rem;
-  color: var(--text-body);
-  text-align: left;
-  align-self: flex-start;
-  line-height: 1.6;
-  margin-bottom: auto;
-}
-
-.device-frame__btn {
+.device-frame__slides {
   width: 100%;
-  padding: 0.875rem;
-  margin-top: 2rem;
-  background: var(--accent-rose);
-  color: var(--white);
-  font-family: var(--font-sans);
-  font-size: 0.8125rem;
-  font-weight: 500;
-  text-align: center;
+  position: relative;
+}
+
+.device-frame__slide {
+  display: none;
+  margin: 0;
+  cursor: zoom-in;
+}
+
+.device-frame__slide.is-active {
+  display: block;
+}
+
+.device-frame__slide img {
+  width: 100%;
+  height: auto;
+  border-radius: 20px;
+  display: block;
+  box-shadow: 0 2px 12px rgba(45, 41, 38, 0.04);
+}
+
+/* --- Lightbox --- */
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: rgba(249, 245, 240, 0.92);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.lightbox.is-open {
+  opacity: 1;
+}
+
+.lightbox[hidden] {
+  display: none;
+}
+
+.lightbox:not([hidden]) {
+  display: flex;
+}
+
+.lightbox__img {
+  max-width: min(90vw, 420px);
+  max-height: 90vh;
+  width: auto;
+  height: auto;
+  border-radius: 24px;
+  box-shadow: var(--shadow-device);
+}
+
+.lightbox__close {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  width: 2.5rem;
+  height: 2.5rem;
   border: none;
-  border-radius: var(--radius-pill);
+  border-radius: 50%;
+  background: var(--white);
+  color: var(--text-primary);
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
   box-shadow: var(--shadow-soft);
+}
+
+.lightbox__close:hover {
+  opacity: 0.8;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lightbox {
+    transition: none;
+  }
 }
 
 /* --- Trust List --- */
@@ -630,15 +697,12 @@ main {
 
 @media (min-width: 480px) {
   .device-frame__screen {
-    padding: 2rem 1.75rem 1.75rem;
+    padding: 1.5rem 1.25rem 1.25rem;
   }
 
-  .device-frame__heading {
-    font-size: 1.5rem;
-  }
-
-  .device-frame__body {
-    font-size: 0.8125rem;
+  .screenshot-carousel__nav {
+    width: 2.75rem;
+    height: 2.75rem;
   }
 }
 
