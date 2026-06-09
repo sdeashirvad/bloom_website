@@ -11,6 +11,11 @@
     <priority>0.5</priority>
   </url>
   <url>
+    <loc>https://bloom.ashirvad.work/delete-data</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
     <loc>https://bloom.ashirvad.work/support</loc>
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
